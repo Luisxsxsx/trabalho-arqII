@@ -1,55 +1,104 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int **allocate(int rows, int columns);
-int **multiplyMatrixes(int **matrixA, int **matrixB, int rows, int columns);
-void printMatrix(int **matrix, int rows, int columns);
-void deallocate(int **matrix, int rows);
+#define M_SIZE 1000
 
-int **fillMatrix(int **matrix, int rows, int columns)
+double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size);
+void fillMatrixZero(double **matrix, int m_size);
+void fillMatrix(double **matrix, int m_size);
+double **allocate(int m_size);
+void deAllocate(double **matrix, int m_size);
+void printMatrix(double **matrix, int m_size);
+
+// Naive - unrolling
+double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size)
 {
-    int idxRow, idxColumn;
-    for (idxRow = 0; idxRow < rows; idxRow++)
+    int idxRow, idxColumn, idxAux;
+    double **matrixC = allocate(m_size);
+
+    for (idxRow = 0; idxRow < m_size; idxRow++)
     {
-        for (idxColumn = 0; idxColumn < columns; idxColumn++)
+        for (idxAux = 0; idxAux < m_size; idxAux++)
         {
-            // *matrix[idxRow * rows + idxColumn] = idxRow + idxColumn;
-            matrix[idxRow][idxColumn] = idxRow + idxColumn;
+            for (idxColumn = 0; idxColumn < m_size; idxColumn++)
+            {
+                matrixC[idxRow][idxColumn] += matrixA[idxRow][idxAux] * matrixB[idxAux][idxColumn];
+            }
         }
     }
 
-    return matrix;
+    return matrixC;
 }
 
-int **allocate(int rows, int columns)
+void fillMatrixZero(double **matrix, int m_size)
 {
-    int idx;
-    int **temp = (int **)malloc(sizeof(int *) * rows);
-
-    for (idx = 0; idx < columns; idx++)
+    for (int idxRow = 0; idxRow < m_size; idxRow++)
     {
-        temp[idx] = (int *)malloc(sizeof(int) * columns);
+        for (int idxColumn = 0; idxColumn < m_size; idxColumn++)
+        {
+            matrix[idxRow][idxColumn] = 0.0;
+        }
+    }
+}
+
+// AGORA é void (não retorna nada)
+void fillMatrix(double **matrix, int m_size)
+{
+    for (int idxRow = 0; idxRow < m_size; idxRow++)
+    {
+        for (int idxColumn = 0; idxColumn < m_size; idxColumn++)
+        {
+            matrix[idxRow][idxColumn] = (double)(idxRow + idxColumn);
+        }
+    }
+}
+
+double **allocate(int m_size)
+{
+    double **temp = (double **)malloc(sizeof(double *) * m_size);
+
+    if (temp == NULL)
+    {
+        printf("ERRO: Falha na alocação de memória!\n");
+        exit(1);
+    }
+
+    for (int idx = 0; idx < m_size; idx++)
+    {
+        temp[idx] = (double *)malloc(sizeof(double) * m_size);
+        if (temp[idx] == NULL)
+        {
+            printf("ERRO: Falha na alocação de memória!\n");
+            exit(1);
+        }
     }
 
     return temp;
 }
 
-void deallocate(int **matrix, int rows)
+void deAllocate(double **matrix, int m_size)
 {
-    int idx;
-    for (idx = 0; idx < rows; idx++)
-        free(matrix[idx]);
+    if (matrix == NULL)
+        return;
+
+    for (int idx = 0; idx < m_size; idx++)
+    {
+        if (matrix[idx] != NULL)
+        {
+            free(matrix[idx]);
+        }
+    }
+    free(matrix);
 }
 
-void printMatrix(int **matrix, int rows, int columns)
+void printMatrix(double **matrix, int m_size)
 {
     printf("\n");
-    int idxRow, idxColumn;
-    for (idxRow = 0; idxRow < rows; idxRow++)
+    for (int idxRow = 0; idxRow < m_size; idxRow++)
     {
-        for (idxColumn = 0; idxColumn < columns; idxColumn++)
+        for (int idxColumn = 0; idxColumn < m_size; idxColumn++)
         {
-            printf("%d ", matrix[idxRow][idxColumn]);
+            printf("%.0f ", matrix[idxRow][idxColumn]); // ← %f para double!
         }
         printf("\n");
     }
@@ -57,43 +106,40 @@ void printMatrix(int **matrix, int rows, int columns)
 
 int main()
 {
-    int rows = 4,
-        columns = 4;
+    printf("Multiplicando matrizes %dx%d com Naive-Interchange\n", M_SIZE, M_SIZE);
 
-    int **matrixA = allocate(rows, columns),
-        **matrixB = allocate(rows, columns),
-        **matrixC;
+    double **matrixA = allocate(M_SIZE);
+    double **matrixB = allocate(M_SIZE);
+    double **matrixC = NULL;
 
-    matrixA = fillMatrix(matrixA, rows, columns);
-    printMatrix(matrixA, rows, columns);
+    fillMatrix(matrixA, M_SIZE);
+    fillMatrix(matrixB, M_SIZE);
 
-    matrixB = fillMatrix(matrixB, rows, columns);
-    printMatrix(matrixB, rows, columns);
-
-    matrixC = multiplyMatrixes(matrixA, matrixB, rows, columns);
-    printMatrix(matrixC, rows, columns);
-
-    deallocate(matrixA, rows);
-    deallocate(matrixB, rows);
-    deallocate(matrixC, rows);
-
-    return 0;
-}
-
-// Naive - interchange
-int **multiplyMatrixes(int **matrixA, int **matrixB, int rows, int columns)
-{
-    int idxRow, idxColumn, idxAux;
-    int **matrixC = allocate(rows, columns);
-
-    for (idxRow = 0; idxRow < rows; idxRow++)
+    // Só imprime se a matriz for pequena (evita poluir a tela)
+    if (M_SIZE <= 10)
     {
-        for (idxAux = 0; idxAux < rows; idxAux++)
-        {
-            for (idxColumn = 0; idxColumn < columns; idxColumn++)
-                matrixC[idxRow][idxColumn] = matrixA[idxRow][idxAux] * matrixB[idxAux][idxColumn];
-        }
+        printf("Matriz A:");
+        printMatrix(matrixA, M_SIZE);
+        printf("Matriz B:");
+        printMatrix(matrixB, M_SIZE);
     }
 
-    return matrixC;
+    matrixC = multiplyMatrixes(matrixA, matrixB, M_SIZE);
+
+    if (M_SIZE <= 10)
+    {
+        printf("Matriz C (resultado):");
+        printMatrix(matrixC, M_SIZE);
+    }
+    else
+    {
+        printf("Multiplicação concluída! (matriz muito grande para imprimir)\n");
+    }
+
+    deAllocate(matrixA, M_SIZE);
+    deAllocate(matrixB, M_SIZE);
+    deAllocate(matrixC, M_SIZE);
+
+    printf("Programa finalizado com sucesso!\n");
+    return 0;
 }

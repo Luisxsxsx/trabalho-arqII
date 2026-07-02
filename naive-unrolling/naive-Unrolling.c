@@ -4,8 +4,8 @@
 #define M_SIZE 1000
 
 double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size);
-void fillMatrixZero(double **matrix, int m_size);
-void fillMatrix(double **matrix, int m_size);
+void fillMatrixZero(double **matrix, int m_size); 
+void fillMatrix(double **matrix, int m_size);     
 double **allocate(int m_size);
 void deAllocate(double **matrix, int m_size);
 void printMatrix(double **matrix, int m_size);
@@ -20,9 +20,12 @@ double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size)
     {
         for (idxColumn = 0; idxColumn < m_size; idxColumn++)
         {
-            for (idxAux = 0; idxAux < m_size; idxAux++)
+            for (idxAux = 0; idxAux < m_size; idxAux += 4)
             {
                 matrixC[idxRow][idxColumn] += matrixA[idxRow][idxAux] * matrixB[idxAux][idxColumn];
+                matrixC[idxRow][idxColumn] += matrixA[idxRow][idxAux + 1] * matrixB[idxAux + 1][idxColumn];
+                matrixC[idxRow][idxColumn] += matrixA[idxRow][idxAux + 2] * matrixB[idxAux + 2][idxColumn];
+                matrixC[idxRow][idxColumn] += matrixA[idxRow][idxAux + 3] * matrixB[idxAux + 3][idxColumn];
             }
         }
     }
@@ -106,7 +109,7 @@ void printMatrix(double **matrix, int m_size)
 
 int main()
 {
-    printf("Multiplicando matrizes %dx%d com Naive-Interchange\n", M_SIZE, M_SIZE);
+    printf("Multiplicando matrizes %dx%d com Naive-Unrolling\n", M_SIZE, M_SIZE);
 
     double **matrixA = allocate(M_SIZE);
     double **matrixB = allocate(M_SIZE);
