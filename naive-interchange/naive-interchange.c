@@ -15,6 +15,7 @@ double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size)
 {
     int idxRow, idxColumn, idxAux;
     double **matrixC = allocate(m_size);
+    fillMatrixZero(matrixC, m_size);
 
     for (idxRow = 0; idxRow < m_size; idxRow++)
     {

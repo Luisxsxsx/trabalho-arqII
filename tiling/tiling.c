@@ -24,9 +24,7 @@ double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size)
         aux_max; // limite interno do bloco
 
     double **matrixC = allocate(m_size);
-
-    // Inicializa com zeros
-    fillMatrixZero(matrixC, m_size); // Agora é void
+    fillMatrixZero(matrixC, m_size);
 
     // 3 'for' para mover entre os blocos
     for (idxTRow = 0; idxTRow < m_size; idxTRow += TILE_SIZE)

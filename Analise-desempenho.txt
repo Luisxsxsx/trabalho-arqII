@@ -1,0 +1,105 @@
+Analise de desempenho:
+
+Algoritmo Naive-Conventional:
+
+    UTILIZANDO GPROF PARA VERIFICAR DESEMPENHO:
+
+        Each sample counts as 0.01 seconds.
+        %   cumulative   self              self     total           
+        time   seconds   seconds    calls   s/call   s/call  name    
+        99.73      7.33     7.33        1     7.33     7.34  multiplyMatrixes
+        0.14      7.34     0.01        2     0.01     0.01  fillMatrix
+        0.14      7.35     0.01        1     0.01     0.01  fillMatrixZero
+        0.00      7.35     0.00        3     0.00     0.00  allocate
+        0.00      7.35     0.00        3     0.00     0.00  deAllocate
+
+    UTILIZANDO PERF PARA VERIFICAR CACHE:
+
+        Performance counter stats for './naive_conventional':
+
+            72.521.358      cache-misses:u                                                        
+            1.381.860.568      cache-references:u                                                    
+            1.276.129.367      L1-dcache-load-misses:u                                               
+            <not supported>      L2-load-misses:u                                                      
+
+            7,369576648 seconds time elapsed
+
+            7,306017000 seconds user
+            0,013784000 seconds sys
+
+Algoritmo Naive-Unrolling:
+
+    UTILIZANDO GPROF PARA VERIFICAR DESEMPENHO:
+
+        Each sample counts as 0.01 seconds.
+        %   cumulative   self              self     total           
+        time   seconds   seconds    calls   s/call   s/call  name    
+        99.58      4.72     4.72        1     4.72     4.73  multiplyMatrixes
+        0.21      4.73     0.01        2     0.01     0.01  fillMatrix
+        0.21      4.74     0.01        1     0.01     0.01  fillMatrixZero
+        0.00      4.74     0.00        3     0.00     0.00  allocate
+        0.00      4.74     0.00        3     0.00     0.00  deAllocate
+
+    UTILIZANDO PERF PARA VERIFICAR CACHE:
+
+        8.781.316      cache-misses:u                                                        
+        2.276.017.887      cache-references:u                                                    
+        1.256.189.039      L1-dcache-load-misses:u                                               
+        <not supported>      L2-load-misses:u                                                      
+
+        4,762380391 seconds time elapsed
+
+        4,706439000 seconds user
+        0,019811000 seconds sys
+
+Algoritmo Naive-Interchange:
+
+    UTILIZANDO GPROF PARA VERIFICAR DESEMPENHO:
+
+        Each sample counts as 0.01 seconds.
+        %   cumulative   self              self     total           
+        time   seconds   seconds    calls   s/call   s/call  name    
+        99.55      4.42     4.42        1     4.42     4.43  multiplyMatrixes
+        0.23      4.43     0.01        2     0.01     0.01  fillMatrix
+        0.23      4.44     0.01        1     0.01     0.01  fillMatrixZero
+        0.00      4.44     0.00        3     0.00     0.00  allocate
+        0.00      4.44     0.00        3     0.00     0.00  deAllocate
+
+    UTILIZANDO PERF PARA VERIFICAR CACHE:
+
+        3.596.315      cache-misses:u                                                        
+        266.164.419      cache-references:u                                                    
+        134.742.851      L1-dcache-load-misses:u                                               
+        <not supported>      L2-load-misses:u                                                      
+
+        4,608347402 seconds time elapsed
+
+        4,555767000 seconds user
+        0,015762000 seconds sys
+
+
+Algoritmo Tiling:
+
+    UTILIZANDO GPROF PARA VERIFICAR DESEMPENHO:
+
+        Each sample counts as 0.01 seconds.
+        %   cumulative   self              self     total           
+        time   seconds   seconds    calls   s/call   s/call  name    
+        99.55      4.40     4.40        1     4.40     4.41  multiplyMatrixes
+        0.23      4.41     0.01        2     0.01     0.01  fillMatrix
+        0.23      4.42     0.01        1     0.01     0.01  fillMatrixZero
+        0.00      4.42     0.00        3     0.00     0.00  allocate
+        0.00      4.42     0.00        3     0.00     0.00  deAllocate
+
+
+    UTILIZANDO PERF PARA VERIFICAR CACHE:
+
+        3.414.200      cache-misses:u                                                        
+        214.316.076      cache-references:u                                                    
+        198.186.042      L1-dcache-load-misses:u                                               
+        <not supported>      L2-load-misses:u                                                      
+
+        4,695565041 seconds time elapsed
+
+        4,655185000 seconds user
+        0,014825000 seconds sys

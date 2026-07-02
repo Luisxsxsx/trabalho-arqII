@@ -4,8 +4,8 @@
 #define M_SIZE 1000
 
 double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size);
-void fillMatrixZero(double **matrix, int m_size); 
-void fillMatrix(double **matrix, int m_size);     
+void fillMatrixZero(double **matrix, int m_size);
+void fillMatrix(double **matrix, int m_size);
 double **allocate(int m_size);
 void deAllocate(double **matrix, int m_size);
 void printMatrix(double **matrix, int m_size);
@@ -15,6 +15,7 @@ double **multiplyMatrixes(double **matrixA, double **matrixB, int m_size)
 {
     int idxRow, idxColumn, idxAux;
     double **matrixC = allocate(m_size);
+    fillMatrixZero(matrixC, m_size);
 
     for (idxRow = 0; idxRow < m_size; idxRow++)
     {
